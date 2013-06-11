@@ -6,9 +6,9 @@ wi = width;
 GR = 3; % nm/h
 GR = 2.*Dp.*1e9-2.8;
 
-GR = GR_slope.*Dp.*1e9+0.2-GR_slope.*1.5;
+%GR = GR_slope.*Dp.*1e9+0.2-GR_slope.*1.5;
 
-%GR = GR_slope;
+GR = GR_slope;
 
 
 Co = (Dp./0.71e-9).^-1.7.*CS;
