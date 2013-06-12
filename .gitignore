@@ -1,3 +1,4 @@
 MODEL/binaries/
 MODEL/*.mod
 Matlab/*.mat
+Matlab/**/*.mat
