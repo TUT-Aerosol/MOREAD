@@ -12,6 +12,7 @@ GR = GR_slope;
 
 
 Co = (Dp./0.71e-9).^-1.7.*CS;
+%Co = zeros(size(Dp));
 G = GR.*1e-9./3600 .*1./(wi); 
 
 %figure

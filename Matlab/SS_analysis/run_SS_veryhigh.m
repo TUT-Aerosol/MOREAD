@@ -1,7 +1,7 @@
 clear all
 %gamma = logspace(-5,-2,10);
 gamma = [1e-14 1e-3];
-CS = [1e-5 1e-4 1e-3 1e-2];
+CS = [1 10 20 ];
 GR_slope = 0.1:0.2:10;
 
 load MOREAD_Dp.mat;
@@ -21,7 +21,7 @@ for i =1:length(GR_slope)
     
     o(i,j,c) = SS_rates(Dp,width,CS(c),gamma(j),GR_slope(i));
     
-J(i,j,c) = o(i,j,c).N(end).*o(i,j,c).G(end);    
+J(i,j,c) = o(i,j,c).N(84).*o(i,j,c).G(84);    
     
 %     figure(1)
 %     hold on
@@ -61,7 +61,7 @@ for i= 1:length(CS)
     figure(1)
     hold on
     plot((GR_slope),((GR_slope(:).^2).*J(:,1,i)./factor3(:)),cols(i));
-    plot((GR_slope),((GR_slope(:).^2).*J(:,1,i)./fa),cols(i));
+    plot((GR_slope),((GR_slope(:).^2).*J(:,1,i)),[cols(i) ':']);
     
 %     plot(GR_slope,(GR_slope.^2).*factor3,[cols(i) ':'])
     plot((GR_slope),((GR_slope(:).^2).*J(:,2,i)./factor3(:)),[cols(i) '--']);

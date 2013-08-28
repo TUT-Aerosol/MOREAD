@@ -77,14 +77,20 @@ if (COND_ON .eq. 1) then
 
         ydot(mm) = ydot(mm)-coe(1,mm)*max(N(mm),0.0)*N(1)
         ydot(mm+1) = ydot(mm+1)+coe(1,mm)*N(mm)*N(1)
+        
+        ! make condensing vapour variable
+        ydot(1) = ydot(1)-coe(1,mm)*max(N(mm),0.0)*N(1)
+        
     end do
 end if
 
-! external coagulation
+! external coagulation and external condensation
 if (SINK_ON .eq. 1) then
     print *,'Sink...'
     do mm = NUCSIZE,IMAX
         ydot(mm) = ydot(mm)-COAGSINK(mm)*N(mm)
+        ! condensing vapour is lost 
+        ydot(1) = ydot(1) - COAGSINK(1)*N(1)
     end do
 end if
 

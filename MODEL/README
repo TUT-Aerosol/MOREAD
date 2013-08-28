@@ -1,0 +1,12 @@
+Compiling MOREAD
+
+
+'gfortran  source/a_dvode_f90_m.f90 
+source/b_discrete_dvodef90.f90 source/discrete_helpers.f90 source/x_discrete.f90
+ -o binaries/test.bin'
+ 
+ 
+ running MOREAD
+ 
+ 
+ 

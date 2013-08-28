@@ -1,7 +1,7 @@
 clear all
 %gamma = logspace(-5,-2,10);
-gamma = [1e-14 1e-3];
-CS = [1e-5 1e-4 1e-3 1e-2];
+gamma = [1e-14];
+CS = [1e-4 1e-3 1e-2];
 GR_slope = 0.1:0.2:10;
 
 load MOREAD_Dp.mat;
@@ -54,15 +54,16 @@ end
  
 for i= 1:length(CS)
 
-   gamma3 = (1./(-1.7+1)).*((3e-9./1.5e-9).^(-1.7)-1);
-   factor3 = exp(-gamma3.*1.5.*CS(i).*(3./1.5).^-1.7./(GR_slope./3600));
-    
+   f = lehtinen_factor(GR_slope(:),CS(i),1.5e-9,3e-9);
+   leh = f.factor(:)
+   
+   
     
     figure(1)
     hold on
-    plot(log10(GR_slope),log10((GR_slope(:).^2).*J(:,1,i)./factor3(:)),cols(i));
+    plot(log10(GR_slope),log10((GR_slope(:).^2).*J(:,1,i)./leh),cols(i));
 %     plot(GR_slope,(GR_slope.^2).*factor3,[cols(i) ':'])
-    plot(log10(GR_slope),log10((GR_slope(:).^2).*J(:,2,i)./factor3(:)),[cols(i) '--']);
+    plot(log10(GR_slope),log10((GR_slope(:).^2).*J(:,1,i)),[cols(i) '--']);
     plot(log10(GR_slope),log10(GR_slope.^2),'k.-')
     plot(log10(GR_slope),log10(GR_slope.^3./10),'k.-')
     
@@ -71,15 +72,15 @@ end
 
 for i= 1:length(CS)
 
-   gamma3 = (1./(-1.7+1)).*((3e-9./1.5e-9).^(-1.7)-1);
-   factor3 = exp(-gamma3.*1.5.*CS(i).*(3./1.5).^-1.7./(GR_slope./3600));
+   f = lehtinen_factor(GR_slope(:),CS(i),1.5e-9,3e-9);
+   leh = f.factor(:)
     
     
     figure(2)
     hold on
-    plot((GR_slope(2:end)),diff(log10((GR_slope(:).^2).*J(:,1,i)./factor3(:)))./diff(log10(GR_slope(:))),cols(i));
+    plot((GR_slope(2:end)),diff(log10((GR_slope(:).^2).*J(:,1,i)./leh(:)))./diff(log10(GR_slope(:))),cols(i));
 %     plot(GR_slope,(GR_slope.^2).*factor3,[cols(i) ':'])
-    plot((GR_slope(2:end)),diff(log10((GR_slope(:).^2).*J(:,2,i)./factor3(:)))./diff(log10(GR_slope(:))),[cols(i) '--']);
+    plot((GR_slope(2:end)),diff(log10((GR_slope(:).^2).*J(:,1,i)))./diff(log10(GR_slope(:))),[cols(i) '--']);
     plot((GR_slope(2:end)),diff(log10(GR_slope.^2))./diff(log10(GR_slope)),'k.-')
     plot((GR_slope(2:end)),diff(log10(GR_slope.^3./10))./diff(log10(GR_slope)),'k.-')
     
