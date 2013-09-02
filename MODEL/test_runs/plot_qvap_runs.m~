@@ -1,0 +1,18 @@
+ qvap = [0.1 0.5 1 5 10];
+
+cols = 'rgbcmykrgbcmykrgbcmyk'
+let = 'ABCDE'
+CS = [1e-4 5e-4 1e-3 5e-3 1e-2];
+
+for l = 1:length(let)
+for q = 1:length(qvap)
+    clear in out
+    fn = sprintf('DR_%s_QVAP_test%02i.mat',let(l),q)
+    load(fn)
+    figure(1)
+    hold on
+    plot(out.time,out.concs(:,2)./1e6,[cols(q) '-'])
+end
+    
+
+

@@ -23,14 +23,19 @@ subroutine f_kine_vode_f90(neq_f, t, y, ydot)
   integer                     :: mm, m1, m2
 
  print *,'Fstart, t= ',t
+print *,'COAGS 1 = ', COAGSINK(1)
 
 do mm=0,IMAX
      N(mm) = max(0.0,y(mm))
     ydot(mm) = 0.0
-    N(0)=0.0
+    N(2)=0.0 ! growth out of range
+    
 end do
 
 big_flux = 0.0
+
+
+
 
 if (COAG_ON .EQ. 1) THEN
     print *,'Coag...'
@@ -75,13 +80,17 @@ if (COND_ON .eq. 1) then
     ! monomer collisions
     do mm = NUCSIZE,IMAX
 
-        ydot(mm) = ydot(mm)-coe(1,mm)*max(N(mm),0.0)*N(1)
-        ydot(mm+1) = ydot(mm+1)+coe(1,mm)*N(mm)*N(1)
+        ydot(mm) = ydot(mm)-coe(1,mm)*max(N(mm),0.0)*max(N(1),0.0)
+        ydot(mm+1) = ydot(mm+1)+coe(1,mm)*N(mm)*max(N(1),0.0)
         
         ! make condensing vapour variable
-        ydot(1) = ydot(1)-coe(1,mm)*max(N(mm),0.0)*N(1)
-        
+        ydot(1) = ydot(1)-coe(1,mm)*max(N(mm),0.0)*max(N(1),0.0)        
     end do
+    
+    ! get the number of particles growing out of the matrix
+    big_flux = big_flux + ydot(IMAX)+coe(1,IMAX)*N(IMAX)*max(N(1),0.0)
+    
+    
 end if
 
 ! external coagulation and external condensation
@@ -89,9 +98,12 @@ if (SINK_ON .eq. 1) then
     print *,'Sink...'
     do mm = NUCSIZE,IMAX
         ydot(mm) = ydot(mm)-COAGSINK(mm)*N(mm)
-        ! condensing vapour is lost 
-        ydot(1) = ydot(1) - COAGSINK(1)*N(1)
     end do
+       ! condensing vapour is lost 
+        ydot(1) = ydot(1) - COAGSINK(1)*max(N(1),0.0)
+        
+        print *,'dCVAP = ',ydot(1)
+ 
 end if
 
 ! nucleation
@@ -101,7 +113,7 @@ if (t .le. PULSE_LENGTH) then
 
 !   1. Activation nucleation
    ydot(NUCSIZE) = ydot(NUCSIZE)+2.0e-7*N(1)
-
+   ydot(1) = ydot(1)+QVAP_0; 
 !    2. Kinetic nucleation
 !  ydot(NUCSIZE) = ydot(NUCSIZE)+(1.0e-20*N(1)**2)
  !  ydot(NUCSIZE) = ydot(NUCSIZE)+(1.0e-21*N(1)**2)
@@ -113,9 +125,6 @@ if (t .le. PULSE_LENGTH) then
 
 end if
 
-
-! ydot(0) = big_flux
-
 if (t .ge. 1.0e20) then
  !print *,'Fend: ydot', ydot
 !pause
@@ -124,6 +133,10 @@ else
    ! print *,'Fend: N(0)', N(0)
     !print *,'Fend: N', N
 end if
+
+ydot(2) = big_flux;
+
+
 end subroutine f_kine_vode_f90
 
 

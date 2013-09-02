@@ -6,14 +6,14 @@ v = load('sam20020414.sum');
 V = Dlog_to_N(v);
 
 dp = V(1,3:end);
-N =  V(67,3:end).*1;
+N =  V(67,3:end).*0.5;
 
 CO = Coags_dR(1e-9,dp,N,273)
 
 
 
 
-fid = fopen('SINKDIST_0.TXT','w');
+fid = fopen('SINKDIST_05.TXT','w');
 % return
 
 

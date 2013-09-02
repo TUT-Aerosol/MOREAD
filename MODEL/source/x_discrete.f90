@@ -92,7 +92,7 @@ print *,'MAXNEQ: ', MAXNEQ, ' CURNEQ:', CURNEQ
 t0 = 0.0
 dt = 10.0
 dtd= 1.0
-tmax = 1800.
+tmax = 3600.
 print *, 'Starting dvode...'
 
 call int_dvode_f90(t0,dt,dtd,tmax,y0_main,rtol_ini,atol_main)
@@ -258,6 +258,7 @@ print *, 'Defaulting globals...'
   NUC_COEFF_ORG = 1.0d-14 ! the nucleation coefficient for organics (if NUC_MECH=5)
   NUC_EXP_ORG = 2.0       ! the nucleation exponent for organics (if NUC_MECH=5)
   CVAP_0 = 1.00d7*1e6     ! the (initial) sulphuric acid concentration
+  QVAP_0 = 1.00d5*1e6     ! the vapour source rate
 
 print *, 'Reading globals...'
 ! reading the globals from a file
@@ -298,6 +299,8 @@ print *, 'Reading globals...'
   read (unit=10, iostat = ios,fmt = '(d14.5)'),NUC_EXP_ORG
   read (unit=10, iostat = ios,fmt = '(a79)'),dummytxt
   read (unit=10, iostat = ios,fmt = '(d14.5)'),CVAP_0
+  read (unit=10, iostat = ios,fmt = '(a79)'),dummytxt
+  read (unit=10, iostat = ios,fmt = '(d14.5)'),QVAP_0
 
 close(10)
 

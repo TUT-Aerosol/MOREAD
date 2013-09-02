@@ -1,6 +1,7 @@
-cvap = [0.5:0.5:20];
+cvap = [1];
+qvap = 1;
 sinksfiles = {'SINKDIST_0.TXT' 'SINKDIST_01.TXT' 'SINKDIST_10.TXT'}
-
+sinksfiles = {'SINKDIST_0.TXT'};
 
 for s= 1:length(sinksfiles),
     delete('SINKDIST.TXT')
@@ -13,7 +14,7 @@ for s= 1:length(sinksfiles),
         
         
         
-        run_name = sprintf('%sKIN_test%02i',runns,i)
+        run_name = sprintf('%sQVAP_test%02i',runns,i)
         
         in.imax = 1000;
         in.temp = 273.15;
@@ -31,14 +32,15 @@ for s= 1:length(sinksfiles),
         in.nuc_exp = 3;
         in.nuc_coeff_org = 1e-14;
         in.nuc_exp_org = 2;
-        in.cvap_0 = cvap(i).*1e7*1e6;
+        in.cvap_0 = cvap(i).*1e7.*1e6;
+        in.qvap_0 = qvap(i).*1e5.*1e6;
         
         make_model_setup(in)
         
         delete('DISC_TEST.TXT')
         delete('DISC_DIAMETERS.TXT')
 try        
-        !./DISCRAD_kinetic
+        !./test.bin
         
         a = load('DISC_TEST.TXT');
         b = load('DISC_DIAMETERS.TXT');
@@ -57,4 +59,4 @@ end
     end
 end
 
-% plot_disc_auto(in,out)
+ plot_disc_auto(in,out)

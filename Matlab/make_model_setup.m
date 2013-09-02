@@ -20,5 +20,6 @@ fprintf(fid,'NUC_EXP=\n%s\n',format_fortran_d(in.nuc_exp));
 fprintf(fid,'NUC_COEFF_ORG=\n%s\n',format_fortran_d(in.nuc_coeff_org));
 fprintf(fid,'NUC_EXP_ORG=\n%s\n',format_fortran_d(in.nuc_exp_org));
 fprintf(fid,'cvap_0=\n%s\n',format_fortran_d(in.cvap_0));
+fprintf(fid,'Qvap_0=\n%s\n',format_fortran_d(in.qvap_0));
 
 fclose(fid);
