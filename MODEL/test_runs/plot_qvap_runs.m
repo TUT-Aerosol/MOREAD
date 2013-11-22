@@ -16,13 +16,10 @@ for l = 1:length(let),
     hold on
     plot(qvap(q),max(out.concs(:,2)).*1e-6./1800,[cols(l) '*'])
     
+    J_ave(l,q) = max(out.concs(:,2)).*1e-6./1800;
+    
+    
 end
     
 end
 
-figure(1)
-set(gca,'xscale','log')
-set(gca,'yscale','log')
-figure(2)
-set(gca,'xscale','log')
-set(gca,'yscale','log')
