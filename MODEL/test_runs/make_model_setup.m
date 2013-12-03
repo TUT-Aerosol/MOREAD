@@ -1,6 +1,10 @@
 function make_model_setup(in)
+% sets up the model:
+% MODEL_SETUP.TXT
+% 
 
 
+fprintf('Writing MODEL_SETUP...')
 fid = fopen('MODEL_SETUP.TXT','w');
 
 fprintf(fid,'IMAX=\n%i\n',in.imax);
@@ -21,5 +25,16 @@ fprintf(fid,'NUC_COEFF_ORG=\n%s\n',format_fortran_d(in.nuc_coeff_org));
 fprintf(fid,'NUC_EXP_ORG=\n%s\n',format_fortran_d(in.nuc_exp_org));
 fprintf(fid,'cvap_0=\n%s\n',format_fortran_d(in.cvap_0));
 fprintf(fid,'Qvap_0=\n%s\n',format_fortran_d(in.qvap_0));
+fprintf(fid,'CONST_CVAP=\n%i\n',in.const_cvap);
+
 
 fclose(fid);
+fprintf('.done.\n')
+
+
+% copying the sink file
+fprintf('Copying sink file %s to SINKDIST.TXT...',in.sinkfilename)
+delete('SINKDIST.TXT')
+str = sprintf('!cp %s SINKDIST.TXT',in.sinkfilename))
+fprintf('.done.\n')
+

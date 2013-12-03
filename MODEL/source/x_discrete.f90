@@ -259,6 +259,8 @@ print *, 'Defaulting globals...'
   NUC_EXP_ORG = 2.0       ! the nucleation exponent for organics (if NUC_MECH=5)
   CVAP_0 = 1.00d7*1e6     ! the (initial) sulphuric acid concentration
   QVAP_0 = 1.00d5*1e6     ! the vapour source rate
+  CONST_CVAP = 1;
+  
 
 print *, 'Reading globals...'
 ! reading the globals from a file
@@ -301,6 +303,8 @@ print *, 'Reading globals...'
   read (unit=10, iostat = ios,fmt = '(d14.5)'),CVAP_0
   read (unit=10, iostat = ios,fmt = '(a79)'),dummytxt
   read (unit=10, iostat = ios,fmt = '(d14.5)'),QVAP_0
+  read (unit=10, iostat = ios,fmt = '(a79)'),dummytxt
+  read (unit=10, iostat = ios,fmt = '(i6)'),CONST_CVAP
 
 close(10)
 
@@ -325,6 +329,7 @@ print *, 'NUC_EXP=      ',NUC_EXP
 print *, 'NUC_COEFF_ORG=',NUC_COEFF_ORG
 print *, 'NUC_EXP_ORG=  ',NUC_EXP_ORG
 print *, 'CVAP_0=       ',CVAP_0
+print *, 'CONST_CVAP=   ',CONST_CVAP
 
 !pause
 

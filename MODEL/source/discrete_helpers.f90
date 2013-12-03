@@ -90,7 +90,7 @@ real(real_16) :: CVAP_0 ! H2SO4 concentration
 real(real_16) :: QVAP_0 ! H2SO4 source rate
 
 
-integer  :: COND_ON, EVAP_ON, SINK_ON, COAG_ON, NUC_MECH
+integer  :: COND_ON, EVAP_ON, SINK_ON, COAG_ON, NUC_MECH, CONST_CVAP
 real(real_16) ::  NUC_COEFF,NUC_EXP,NUC_COEFF_ORG,NUC_EXP_ORG
 
 end MODULE global_variables

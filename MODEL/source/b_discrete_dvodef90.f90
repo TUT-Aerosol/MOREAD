@@ -84,7 +84,11 @@ if (COND_ON .eq. 1) then
         ydot(mm+1) = ydot(mm+1)+coe(1,mm)*N(mm)*max(N(1),0.0)
         
         ! make condensing vapour variable
-        ydot(1) = ydot(1)-coe(1,mm)*max(N(mm),0.0)*max(N(1),0.0)        
+        if (CONST_CVAP .eq. 1) then 
+       		ydot(1) = 0.0
+        else
+        	ydot(1) = ydot(1)-coe(1,mm)*max(N(mm),0.0)*max(N(1),0.0)        
+        end if 
     end do
     
     ! get the number of particles growing out of the matrix
@@ -99,9 +103,12 @@ if (SINK_ON .eq. 1) then
     do mm = NUCSIZE,IMAX
         ydot(mm) = ydot(mm)-COAGSINK(mm)*N(mm)
     end do
-       ! condensing vapour is lost 
-        ydot(1) = ydot(1) - COAGSINK(1)*max(N(1),0.0)
-        
+       ! condensing vapour is lost
+        if (CONST_CVAP .eq. 1) then 
+        	ydot(1) = 0.0
+        else
+        	ydot(1) = ydot(1) - COAGSINK(1)*max(N(1),0.0)
+        end if 
         print *,'dCVAP = ',ydot(1)
  
 end if
@@ -111,17 +118,27 @@ if (t .le. PULSE_LENGTH) then
 !    ydot(NUCSIZE) = ydot(NUCSIZE)+NUCRATE
 !    print *, 'Nucleating... nucrate/ydot(nucsize)', NUCRATE, ydot(NUCSIZE)
 
-!   1. Activation nucleation
-   ydot(NUCSIZE) = ydot(NUCSIZE)+2.0e-7*N(1)
-   ydot(1) = ydot(1)+QVAP_0; 
-!    2. Kinetic nucleation
-!  ydot(NUCSIZE) = ydot(NUCSIZE)+(1.0e-20*N(1)**2)
- !  ydot(NUCSIZE) = ydot(NUCSIZE)+(1.0e-21*N(1)**2)
-!  3. free exponent nucleation
-!   ydot(NUCSIZE) = ydot(NUCSIZE)+(Xe-14*N(1)**nuc_exp)*1e6
-!  4. free exponent nucleation, acid and organic
-!   ydot(NUCSIZE) = ydot(NUCSIZE)+(Xe-14*N(1)**nuc_exp)*((Xe-14*N(2)**nuc_exp_org))*1e6
 
+select case (NUC_MECH)
+
+!   1. Activation nucleation
+	case (1)
+   		ydot(NUCSIZE) = ydot(NUCSIZE)+NUC_COEFF*N(1)
+   	case (2) ! kinetic nucleation
+        ydot(NUCSIZE) = ydot(NUCSIZE)+(NUC_COEFF*N(1)**2)
+    case (3) ! constant J
+        ydot(NUCSIZE) = ydot(NUCSIZE)+NUCRATE
+    case (4) !  3. free exponent nucleation
+    	ydot(NUCSIZE) = ydot(NUCSIZE)+(NUC_COEFF*N(1)**nuc_exp)
+	case default
+		ydot(NUCSIZE) = 0.0
+end select
+
+if (CONST_CVAP .eq. 1) then 
+   	ydot(1) = 0.0
+else
+   	ydot(1) = ydot(1)+QVAP_0; 
+end if 
 
 end if
 
@@ -136,6 +153,10 @@ end if
 
 ydot(2) = big_flux;
 
+! make absolutely sure that if we want a constant CVAPOR then it really stays constant
+if (CONST_CVAP .eq. 1) then
+	ydot(1) = 0.0
+end if
 
 end subroutine f_kine_vode_f90
 
