@@ -3,4 +3,10 @@ MODEL/*.mod
 Matlab/*.mat
 Matlab/**/*.mat
 MODEL/**/*.mat
+MODEL/**/**/*.mat
 MODEL/*.mat
+MODEL/**/*.TXT
+MODEL/**/**/*.TXT
+MODEL/**/*~
+MODEL/**/*.bin
+MODEL/**/**/*.bin

@@ -6,7 +6,7 @@ GR_slope = 0.1:0.2:10;
 
 load MOREAD_Dp.mat;
 
-Dp = MOREAD.Dp,
+Dp = MOREAD.Dp.*2,
 width = MOREAD.width;
 
 close all

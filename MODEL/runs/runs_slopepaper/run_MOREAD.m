@@ -23,17 +23,17 @@ function[out,in] = run_MOREAD(varargin)
  in.cvap_0 = 1e7.*1e6;  % starting cvap
  in.qvap_0 = 1e5.*1e6;  % starting vapour source
  in.const_cvap = 1; 
- in.sinkfilename = 'SINKDIST_0.TXT';
+ in.sinkfilename = 'SINKDIST_0.TXT'; % this is the CS distribution shape file
  in.runfilename  = 'TEST_MOREAD';
  in.rundate = datestr(now);
  in.model_version = 0.5;
  in.binary_name = 'MOREAD_05.bin';
+ in.condsink_value = 1e-3;  % the CS distribution will be scaled so that the CS matches this value
 
 param_names = fieldnames(in);
 total_params = length(param_names);
- 
- 
- 
+
+
 % If user has set parameters in the input, replace default values with
 % user-defined values.
 
@@ -77,13 +77,16 @@ end
  
  setenv('DYLD_LIBRARY_PATH', '/usr/local/bin/'); % for MAC
 
-make_model_setup(in) 
+% make the setup files and update the input structure with the sink info
+in = make_model_setup(in);  
 
 % delete existing output files
 if exist('DISC_TEST.TXT')
     delete('DISC_TEST.TXT')
     delete('DISC_DIAMETERS.TXT')
 end
+
+
 
 try        
 % this runs the model 
@@ -108,7 +111,7 @@ fprintf('Saving output data in %s ...', sav)
         fprintf('.done.\n');
         
 catch
-    fprintf('Run %s failed! error = %s',run_name, lasterr)
+    fprintf('Run %s failed! error = %s',in.runfilename, lasterr)
 end
     
 end

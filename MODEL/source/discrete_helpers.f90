@@ -236,7 +236,7 @@ if (nacid < 3.or.nacid > 2e11) stop &! validity of parameterizations
 'number of sulphuric acid molecules in particles out of bounds'
 
 ! parameterization for particle 'wet' radius (accuracy: < +/- 10%)
-rd = DRYDIAM(ii)*1d9/2.! radius of sulphuric acid content (nm)
+rd = DRYDIAM(ii)*1.d9! radius of sulphuric acid content (nm)
 
 rd = log(rd)
 z = 0.3571062410312164 + log(RH)*0.1005557226829263 + rd*(1.072418249000919 - rd*0.007225150816512805)
@@ -258,7 +258,7 @@ wet_mass = nacid*molecmass_h2so4 + nwater*molec_h2o
 
 ! updating global arrays 
 WETMASS(ii) = wet_mass  ! (kg)
-WETDIAM(ii) = wet_rad*2.! m
+WETDIAM(ii) = wet_rad! m
 
 
 end do
@@ -289,7 +289,7 @@ end if
 
   end subroutine binvalidity
 
-
+	
 subroutine make_coag_sink
 
 implicit none

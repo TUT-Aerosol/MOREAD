@@ -64,7 +64,7 @@ print *, DRYDIAM(50)
 print *, WETDIAM(50)
 
 print *, 'SA mol vol:', molecvol_h2so4
-print *, 'SA mol diam:', (molecvol_h2so4*3./(4.*pi))**(1./3.)
+print *, 'SA mol radius:', (molecvol_h2so4*3./(4.*pi))**(1./3.)
 
 call make_coag_sink
 
@@ -92,7 +92,7 @@ print *,'MAXNEQ: ', MAXNEQ, ' CURNEQ:', CURNEQ
 t0 = 0.0
 dt = 10.0
 dtd= 1.0
-tmax = 3600.
+tmax = 4.0*3600.
 print *, 'Starting dvode...'
 
 call int_dvode_f90(t0,dt,dtd,tmax,y0_main,rtol_ini,atol_main)
@@ -181,7 +181,7 @@ subroutine int_dvode_f90(t0,dt_in,dtd_in,tmax,y0,rtol,atol)
     TYPE (VODE_OPTS) :: OPTIONS
 
     double precision :: test
-
+	character(25)             :: form ! for saving in dynamic format
 
 ! set up variables
 
@@ -218,7 +218,11 @@ OPTIONS = SET_OPTS(RELERR=rtol, ABSERR_VECTOR=atol)
 
 ! test saving 
         open(unit=10,file='DISC_TEST.TXT',status='unknown',position='append')
-        write(10,"(d14.6,1x,1000d14.6)"),tim,y(1:1000)
+  		form = '(d14.6,1x,XXXXXD14.6)'
+		write(form(11:15),"(I5.5)"),IMAX
+		print *,"Save format string = "
+		print *,form     
+        write(10,form),tim,y(1:IMAX)
         close(10)
     !pause
         if (tout .gt. tmax) then
@@ -403,8 +407,8 @@ open(unit=20,file='DISC_DIAMETERS.TXT',status='replace',position='rewind')
 form = '(XXXXXD14.6)'
 write(form(2:6),"(I5.5)"),IMAX
 print *, form
-write(20,form),DRYDIAM(1:1000)
-write(20,form),WETDIAM(1:1000)
+write(20,form),DRYDIAM(1:IMAX)
+write(20,form),WETDIAM(1:IMAX)
 close(20)
 !pause
 
@@ -416,6 +420,18 @@ do m1 = 1,IMAX
  end do
 !print *, 'Coagulation coef... m1 =  ',m1,'COEF(m1, 1) = ', COE(m1, 1)
 end do
+
+! save the coagulation coefficient of vapour molecule with particles
+open(unit=30,file='COND_RATE.TXT',status='replace',position='rewind')
+! some trickery to get a dynamic format... looks a bit stoopid i guess there's a better way but oh well
+form = '(XXXXXD14.6)'
+write(form(2:6),"(I5.5)"),IMAX
+print *, form
+write(30,form),COE(1,1:IMAX)
+close(30)
+!pause
+
+
 
 ! no evaporation
 print *, 'Zeroing evaporation...'

@@ -10,6 +10,8 @@ eval(['!cp ../scripts/run_MOREAD.m ' rundirname '/'])
 eval(['!cp ../scripts/format_fortran_d.m ' rundirname '/'])
 eval(['!cp ../scripts/plot_disc_auto_exact.m ' rundirname '/'])
 eval(['!cp ../scripts/disc_conv.m ' rundirname '/'])
+eval(['!cp ../scripts/get_disc_nucrate_exact.m ' rundirname '/'])
+
 
 eval(['!cp ../binaries/MOREAD_05.bin ' rundirname '/'])
 

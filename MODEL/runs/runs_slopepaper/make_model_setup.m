@@ -1,8 +1,8 @@
-function make_model_setup(in)
+function[in_updated] = make_model_setup(in)
 % sets up the model:
 % MODEL_SETUP.TXT
 % 
-in
+in_updated = in;
 
 fprintf('Writing MODEL_SETUP...')
 fid = fopen('MODEL_SETUP.TXT','w');
@@ -32,10 +32,31 @@ fclose(fid);
 fprintf('.done.\n')
 
 
-% copying the sink file
-fprintf('Copying sink file %s to SINKDIST.TXT...',in.sinkfilename)
-delete('SINKDIST.TXT')
-str = sprintf('!cp %s SINKDIST.TXT',in.sinkfilename);
-eval(str);
+% creating the the sink file and updating the input structure with the sink
+% distribution
+csfile = textread(in.sinkfilename); 
+cs_size = csfile(1,1);
+CS_Dp = csfile(2,1:cs_size).*2;
+CS_N  = csfile(3,1:cs_size);
+
+CS_0 = CS_general(CS_Dp,CS_N, in.temp,1.0)
+CSscale = in.condsink_value./CS_0; % the scaling factor
+CS_N_run = CSscale.*CS_N;
+
+% write the new CS file
+if exist('SINKDIST.TXT')
+    delete('SINKDIST.TXT')
+end
+fprintf('Copying and scaling sink file %s to SINKDIST.TXT...',in.sinkfilename)
+fid = fopen('SINKDIST.TXT','w');
+fprintf(fid,'%i\n',cs_size); % the distribution length
+fprintf(fid,'%s\n',format_fortran_d(CS_Dp./2)); % scale back to diameter
+fprintf(fid,'%s\n',format_fortran_d(CS_N_run));
+fclose(fid);
+
+in_updated.sinkdist = [CS_Dp(:)'; CS_N_run(:)'];
+
+
 fprintf('.done.\n')
 
+in_updated
