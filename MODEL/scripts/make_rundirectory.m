@@ -1,6 +1,6 @@
 % make a rundirectory with all the necessary files in the MODEL/runs directory
 
-rundirname = 'runs_slopepaper';
+rundirname = 'runs_WCPT';
 
 cd /Users/dal/MOREAD/MODEL/runs
 
@@ -13,7 +13,7 @@ eval(['!cp ../scripts/disc_conv.m ' rundirname '/'])
 eval(['!cp ../scripts/get_disc_nucrate_exact.m ' rundirname '/'])
 
 
-eval(['!cp ../binaries/MOREAD_05.bin ' rundirname '/'])
+eval(['!cp ../binaries/MOREAD_5s_wcpt.bin ' rundirname '/'])
 
 % copy default sink file 
 eval(['!cp ../inputs/SINKDIST_0.TXT ' rundirname '/'])

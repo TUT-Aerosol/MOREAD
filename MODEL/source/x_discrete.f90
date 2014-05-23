@@ -72,6 +72,7 @@ call make_coag_sink
 N_main(:) = 0.01
 N_main(NUCSIZE) = 0.0e12
 N_main(1) = CVAP_0
+N_main(3) = 10.0  ! the reference CS diameter
 y0_main = N_main(1:IMAX)
 
 atol_ini = 10.0
@@ -90,9 +91,9 @@ print *,'MAXNEQ: ', MAXNEQ, ' CURNEQ:', CURNEQ
 
 !! setting the start time
 t0 = 0.0
-dt = 10.0
+dt = 0.01
 dtd= 1.0
-tmax = 4.0*3600.
+tmax = 5.0
 print *, 'Starting dvode...'
 
 call int_dvode_f90(t0,dt,dtd,tmax,y0_main,rtol_ini,atol_main)

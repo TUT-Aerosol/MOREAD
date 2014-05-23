@@ -19,6 +19,7 @@ subroutine f_kine_vode_f90(neq_f, t, y, ydot)
   INTENT(OUT) :: ydot
 
   real(real_16)            :: N(0:IMAX)  ! to eliminate subzero elements
+  real(real_16)			   :: sink_scale, sGR 
 
   integer                     :: mm, m1, m2
 
@@ -28,8 +29,8 @@ print *,'COAGS 1 = ', COAGSINK(1)
 do mm=0,IMAX
      N(mm) = max(0.0,y(mm))
     ydot(mm) = 0.0
-    N(2)=0.0 ! growth out of range
-    
+    N(2)=max(0.0,y(2)) ! growth out of range
+    N(3) = max(0.0,y(3)) ! reference diameter 
 end do
 
 big_flux = 0.0
@@ -98,16 +99,34 @@ if (COND_ON .eq. 1) then
 end if
 
 ! external coagulation and external condensation
+
+! this is a scaling factor for the sink, for quick growth situations
+! only to be used for diesel situations
+
+sGR = N(1) / (5.0e16);
+ydot(3) = sGR; ! increasing the reference diameter, nm/s
+sink_scale = 0.0091*N(3)**2 + 0.0287*N(3) -0.2073  ! scaling the sink based on growth of background particles
+
+! then, calculate the coagulation sink for particles outside the range
+! assume that they are of size 15 nm -> we can estimate that 
+! coagsink for them is 0.0056*COAGSINK(1) (based on Lehtinen et al., 2007)
+
+
 if (SINK_ON .eq. 1) then
     print *,'Sink...'
     do mm = NUCSIZE,IMAX
-        ydot(mm) = ydot(mm)-COAGSINK(mm)*N(mm)
+        ydot(mm) = ydot(mm)-sink_scale*COAGSINK(mm)*N(mm)
     end do
        ! condensing vapour is lost
         if (CONST_CVAP .eq. 1) then 
         	ydot(1) = 0.0
         else
-        	ydot(1) = ydot(1) - COAGSINK(1)*max(N(1),0.0)
+        	ydot(1) = ydot(1) - sink_scale*COAGSINK(1)*max(N(1),0.0)
+        	
+        	! particles that have grown out of range also take vapor
+        	! assume that they are of size 10 nm (this is an underestimate)
+        	! condensation sink of 1 particle/m3 = 2.07e-14
+        	ydot(1) = ydot(1) - 2.07e-14*N(2)*max(N(1),0.0) 
         end if 
         print *,'dCVAP = ',ydot(1)
  
@@ -151,7 +170,13 @@ else
     !print *,'Fend: N', N
 end if
 
-ydot(2) = big_flux;
+! add particles outside
+ydot(2) = ydot(2)+big_flux;
+! then, calculate the coagulation sink for particles outside the range
+! assume that they are of size 15 nm -> we can estimate that 
+! coagsink for them is 0.0056*COAGSINK(1) (based on Lehtinen et al., 2007)
+
+ydot(2) = ydot(2) - sink_scale*COAGSINK(1)*0.0056*N(2);
 
 ! make absolutely sure that if we want a constant CVAPOR then it really stays constant
 if (CONST_CVAP .eq. 1) then
