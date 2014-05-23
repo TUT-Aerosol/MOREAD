@@ -10,3 +10,4 @@ MODEL/**/**/*.TXT
 MODEL/**/*~
 MODEL/**/*.bin
 MODEL/**/**/*.bin
+MODEL/**/**/fort.6
