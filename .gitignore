@@ -11,3 +11,7 @@ MODEL/**/*~
 MODEL/**/*.bin
 MODEL/**/**/*.bin
 MODEL/**/**/fort.6
+*.mat
+**/*.mat
+.DS_Store
+**/.DS_Store
