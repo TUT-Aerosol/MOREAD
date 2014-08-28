@@ -85,14 +85,14 @@ end
 
 % if no binary name is given in the arguments,
 % find the binary
-if ~inaryNameGiven
+if ~binaryNameGiven
     bn = dir('*.bin');
     if length(bn)>1,
         error('Multiple binary files found in rundirectory. Please give the binary file as an input value. Example: run_MOREAD(''binary_name'',''MOREAD.bin'')')
     elseif isempty(bn),
         error('No binary found. Compile or copy a binary file and place in the current directory.')
     elseif length(bn)==1,
-        fprintf('Using only binary in directory: %s/n',bn);
+        fprintf('Using only binary in directory: %s/n',bn.name);
         in.binary_name = bn.name;
     else
         error('Something really strange happened. Get a new computer.')

@@ -93,7 +93,7 @@ print *,'MAXNEQ: ', MAXNEQ, ' CURNEQ:', CURNEQ
 t0 = 0.0
 dt = 0.01
 dtd= 1.0
-tmax = 5.0
+tmax = 100.0
 print *, 'Starting dvode...'
 
 call int_dvode_f90(t0,dt,dtd,tmax,y0_main,rtol_ini,atol_main)
